@@ -39,7 +39,7 @@ def main(argv):
                 magic, cputype, cpusubtype = unpack("<III", macho_file.read(4*3))
                 print "[+] add file '%s' (cputype=0x%x, cpusubtype=0x%x, size=0x%x) at offset 0x%x" % (input_file, cputype, cpusubtype, size, offset)
                 to_write.append((offset, data))
-                fat_file.write(pack('>IIIII', cputype, cpusubtype, offset, size, 0))
+                fat_file.write(pack('>IIIII', cputype, cpusubtype, offset, size, 0xc))
                 offset += size
                 offset = offset + (0x1000 - offset % 0x1000)
 
