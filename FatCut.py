@@ -63,9 +63,8 @@ def main(argv):
         assert magic == 0xcafebabe
         nfat_arch = unpack('>I', fat_file.read(4))[0]
         print "[+] FAT file with %d arch%s" % (nfat_arch, "s" if nfat_arch > 1 else "")
-        
-        binarys = []
 
+        binarys = []
         for i in range(nfat_arch):
             cputype, cpusubtype = unpack('>II', fat_file.read(8))
             offset, size, align = unpack('>III', fat_file.read(12))
