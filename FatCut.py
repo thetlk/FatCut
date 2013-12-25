@@ -5,15 +5,16 @@ import argparse
 import os
 from struct import unpack
 
-CPU_TYPE_POWERPC = 0x12
-CPU_TYPE_POWERPC64 = 0x1000012
 CPU_TYPE_I386 = 0x7
-CPU_TYPE_X86_64 = 0x1000007
 CPU_TYPE_MC680x0 = 0x6
 CPU_TYPE_HPPA = 0xb
-CPU_TYPE_I860 = 0xf
+CPU_TYPE_ARM = 0xc
 CPU_TYPE_MC88000 = 0xd
 CPU_TYPE_SPARC = 0xe
+CPU_TYPE_I860 = 0xf
+CPU_TYPE_POWERPC = 0x12
+CPU_TYPE_POWERPC64 = 0x1000012
+CPU_TYPE_X86_64 = 0x1000007
 
 
 def display_cputype(cputype):
@@ -36,8 +37,10 @@ def display_cputype(cputype):
         return "m88k"
     elif cputype == CPU_TYPE_SPARC:
         return "sparc"
+    elif cputype == CPU_TYPE_ARM:
+        return "arm"
     else:
-        return "unknow arch"
+        return "unknow arch - %x" % cputype
 
 
 def main(argv):
@@ -58,14 +61,16 @@ def main(argv):
         except:
             pass
 
+        count = 0
         for binary in binarys:
             cputype, cpusubtype, offset, size, align = binary
             fat_file.seek(offset)
             data = fat_file.read(size)
-            filename = argv.output_dir + '/fatcut' + argv.filename.replace('/', '-') + '-' + display_cputype(cputype)
+            filename = argv.output_dir + '/fatcut' + argv.filename.replace('/', '-') + '-' + display_cputype(cputype) + '-' + str(count)
             print "\t[+] write 0x%x bytes from offset 0x%x into %s" % (size, offset, filename)
             with open(filename, 'wb') as sortie:
                 sortie.write(data)
+            count += 1
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Extract binary from FAT file')
